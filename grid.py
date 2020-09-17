@@ -44,8 +44,9 @@ class Grid(Model):
 			car = Car(self.id, self, 'east')						# create new car
 			self.id+=1
 			self.grid.place_agent(car, (0, 5))	# add car to left side of grid
-			self.schedule.add(car)    					# add car to schedule
+			self.schedule.add(car)
+			    					# add car to schedule
 			car = Car(self.id, self, 'north')						# create new car
 			self.id+=1
-			self.grid.place_agent(car, (5, 0	))	# add car to left side of grid
+			self.grid.place_agent(car, (5, 0))	# add car to left side of grid
 			self.schedule.add(car)    					# add car to schedule
