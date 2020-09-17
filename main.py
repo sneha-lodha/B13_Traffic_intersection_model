@@ -16,12 +16,19 @@ def agent_portrayal(agent):
 								'r': 0.5
 								}
 	if agent.getType() == 'light':
-		portrayal = {	'Shape': 'circle',
+		portrayal = {	'Shape': 'rect',
 								'Color': agent.getColor(),
 								'Filled': 'true',
-								'Layer': 1,
-								'r': 1
+								'Layer': 2,
+								'w': 0.1,
+								'h': 1 
 								}
+		if agent.getDirection() == 'south' or agent.getDirection() == 'north':
+			portrayal['w'] = 1
+			portrayal['h'] = 0.1
+
+
+
 	#if the agent is part of the background
 	if agent.getType() == 'background':
 		portrayal = {	'Shape': 'rect',
