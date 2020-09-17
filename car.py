@@ -60,3 +60,6 @@ class Car(Agent):
 
 	def getType(self):
 		return self.type
+
+	def getDirection(self):
+		return self.direction
