@@ -21,10 +21,10 @@ def agent_portrayal(agent):
 								'Filled': 'true',
 								'Layer': 2,
 								'w': 0.1,
-								'h': 1 
+								'h': 0.8 
 								}
 		if agent.getDirection() == 'south' or agent.getDirection() == 'north':
-			portrayal['w'] = 1
+			portrayal['w'] = 0.8
 			portrayal['h'] = 0.1
 
 
@@ -41,7 +41,7 @@ def agent_portrayal(agent):
 	return portrayal
 
 # how the canvas looks
-canvas = CanvasGrid(agent_portrayal, 11, 11, 500, 500) 
+canvas = CanvasGrid(agent_portrayal, 13, 13, 500, 500) 
 
 # which grid and canvas to run
 server = ModularServer(Grid, [canvas], 'Grid')			# ,{'x':10, 'y':10}
