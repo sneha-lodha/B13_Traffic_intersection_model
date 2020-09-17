@@ -6,6 +6,7 @@ from mesa.visualization.ModularVisualization import ModularServer
 
 from car import *
 from background import *
+from trafficlight import *
 
 
 class Grid(Model):
@@ -25,6 +26,10 @@ class Grid(Model):
 				else: # if not center row/column, its grass
 					self.grid.place_agent(Background(self.id, self, 'green'), (i, j))
 				self.id+=1
+		light = Traffic_light(self.id, self)
+		self.grid.place_agent(light, (4,4))
+		self.schedule.add(light)    					# add car to schedule
+		self.id+=1
 
   
 	def step(self):

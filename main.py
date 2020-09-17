@@ -15,7 +15,13 @@ def agent_portrayal(agent):
 								'Layer': 1,
 								'r': 0.5
 								}
-
+	if agent.getType() == 'light':
+		portrayal = {	'Shape': 'circle',
+								'Color': agent.getColor(),
+								'Filled': 'true',
+								'Layer': 1,
+								'r': 1
+								}
 	#if the agent is part of the background
 	if agent.getType() == 'background':
 		portrayal = {	'Shape': 'rect',
