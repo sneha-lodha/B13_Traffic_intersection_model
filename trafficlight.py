@@ -29,16 +29,16 @@ class Traffic_light(Agent):
 
 	def timer(self):
 		if self.time == 5:
-			if self.direction == 'north':
+			if self.direction == 'north' or self.direction == 'south':
 				self.setColor('red')
 		if self.time == 6:
-			if self.direction == 'east':
+			if self.direction == 'east' or self.direction == 'west':
 				self.setColor('blue')
 		if self.time == 11:
-			if self.direction == 'east': 
+			if self.direction == 'east' or self.direction == 'west': 
 				self.setColor('red') 
 		if self.time == 12:
-			if self.direction == 'north':
+			if self.direction == 'north' or self.direction == 'south':
 				self.setColor('blue')
 			self.time = 0
 		self.time+=1
