@@ -4,18 +4,22 @@ from mesa import *
 
 class Car(Agent):
 
-	def __init__(self, id, model):
+	def __init__(self, id, model, direction):
 		super().__init__(id, model)			# required by mesa
 		self.type = 'car'
 		self.color = self.randomColor()
+		self.direction = direction
 		
 	# car moves by one grid forward per step
 	def move(self):
-		if(self.pos[0] == self.model.grid.width - 1):
+		if(self.pos[0] == self.model.grid.width - 1 or self.pos[1] == self.model.grid.height -1):
 			self.model.schedule.remove(self)
 			self.model.grid.remove_agent(self)
 		else:
-			self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1])) #move in x direction, keep y direction
+			if self.direction == 'east':
+				self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1])) #move in x direction, keep y direction
+			if self.direction == 'north':
+				self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1)) #move in x direction, keep y direction
 
 	# called every step
 	def step(self):
