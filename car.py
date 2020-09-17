@@ -17,36 +17,54 @@ class Car(Agent):
 	# car moves by one grid forward per step
 	def move(self):
 		trafficLights = self.identifyTrafficLights()
-		eastLight = self.getDirectionalLight(trafficLights, 'east')
 
 		if self.direction == 'east':
+			eastLight = self.getDirectionalLight(trafficLights, 'east')
 			if self.pos[0] == self.model.grid.width - 1:
 				self.removeAgent()
 			else:
 				if(eastLight.color == 'red' and self.pos[0] == 4):
 					pass
-				elif(eastLight.color == 'red'):
-					print("RED")
-					if(not self.carAhead(self.pos[0],self.pos[1])):
-						self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1])) #move in x direction, keep y direction
-				elif(eastLight.color == 'blue'):
+				elif(eastLight.color == 'red' and not self.carAhead()):
+					self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1])) #move in x direction, keep y direction
+				elif(eastLight.color == 'green'):
 					self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1]))
 		
 		if self.direction == 'west':
+			westLight = self.getDirectionalLight(trafficLights, 'west')
 			if self.pos[0] == 0:
 				self.removeAgent()
 			else:
-				self.model.grid.move_agent(self, (self.pos[0]-1, self.pos[1])) #move in x direction, keep y direction
+				if(westLight.color == 'red' and self.pos[0] == 8):
+					pass
+				elif(westLight.color == 'red' and not self.carAhead()):
+					self.model.grid.move_agent(self, (self.pos[0]-1, self.pos[1])) #move in x direction, keep y direction
+				elif(westLight.color == 'green'):
+					self.model.grid.move_agent(self, (self.pos[0]-1, self.pos[1]))
+
 		if self.direction == 'south':
+			southLight = self.getDirectionalLight(trafficLights, 'south')
 			if self.pos[1] == 0:
 				self.removeAgent()
 			else:
-				self.model.grid.move_agent(self, (self.pos[0], self.pos[1]-1)) #move in x direction, keep y direction
+				if(southLight.color == 'red' and self.pos[1] == 8):
+					pass
+				elif(southLight.color == 'red' and not self.carAhead()):
+					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]-1)) #move in x direction, keep y direction
+				elif(southLight.color == 'green'):
+					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]-1))
+
 		if self.direction == 'north':
+			northLight = self.getDirectionalLight(trafficLights, 'north')
 			if self.pos[1] == self.model.grid.height - 1:
 				self.removeAgent()
 			else:
-				self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1)) #move in x direction, keep y direction
+				if(northLight.color == 'red' and self.pos[1] == 4):
+					pass
+				elif(northLight.color == 'red' and not self.carAhead()):
+					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1)) #move in x direction, keep y direction
+				elif(northLight.color == 'green'):
+					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1))
 	# called every step
 	def step(self):
 		self.move()
@@ -56,9 +74,15 @@ class Car(Agent):
 			if e.direction == direction:
 				return e
 
-	def carAhead(self, x, y):
-		cellContents = list(self.model.grid.iter_cell_list_contents((x+1,y)))
-		print(cellContents)
+	def carAhead(self):
+		if(self.direction == 'east'):
+			cellContents = list(self.model.grid.iter_cell_list_contents((self.pos[0]+1,self.pos[1])))
+		elif(self.direction == 'west'):
+			cellContents = list(self.model.grid.iter_cell_list_contents((self.pos[0]-1,self.pos[1])))
+		elif(self.direction == 'south'):
+			cellContents = list(self.model.grid.iter_cell_list_contents((self.pos[0],self.pos[1]-1)))
+		elif(self.direction == 'north'):
+			cellContents = list(self.model.grid.iter_cell_list_contents((self.pos[0],self.pos[1]+1)))
 		for e in cellContents:
 			if(e.type == 'car'):
 				return True
