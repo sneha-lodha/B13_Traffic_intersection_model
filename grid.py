@@ -26,15 +26,21 @@ class Grid(Model):
 				else: # if not center row/column, its grass
 					self.grid.place_agent(Background(self.id, self, 'green'), (i, j))
 				self.id+=1
-		light = Traffic_light(self.id, self)
-		self.grid.place_agent(light, (4,4))
-		self.schedule.add(light)    					# add car to schedule
-		self.id+=1
+		add_light(self)
 
-  
 	def step(self):
-		car = Car(self.id, self)						# create new car
-		self.id+=1
-		self.grid.place_agent(car, (-1, 5))	# add car to left side of grid
-		self.schedule.add(car)    					# add car to schedule
 		self.schedule.step()
+		if(len(list(self.grid.iter_cell_list_contents((0,5)))) < 2):
+			car = Car(self.id, self)			# create new car
+			self.id+=1
+			self.grid.place_agent(car, (0, 5))
+			self.schedule.add(car)    			# add car to schedule
+					# add car to left side of grid
+
+
+#Function to add car to grid
+def add_light(self):
+	light = Traffic_light(self.id, self)
+	self.grid.place_agent(light, (4,4))
+	self.schedule.add(light)    		
+	self.id+=1
