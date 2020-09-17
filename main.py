@@ -31,9 +31,8 @@ def agent_portrayal(agent):
 canvas = CanvasGrid(agent_portrayal, 11, 11, 500, 500) 
 
 # which grid and canvas to run
-server = ModularServer(Grid, [canvas], 'Grid'
-																			# ,{'x':10, 'y':10}
-																			)
+server = ModularServer(Grid, [canvas], 'Grid')			# ,{'x':10, 'y':10}
+																			
 
 server.port = 8523 # 8521 is default
 server.launch()

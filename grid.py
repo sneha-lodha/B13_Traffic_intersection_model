@@ -13,12 +13,13 @@ class Grid(Model):
 	def __init__(self):
 		self.grid = MultiGrid(11, 11, False) # grid can contain multiple agents per square
 		self.schedule = BaseScheduler(self)  # steps are in order of addition to grid
+		self.size = 11
 		self.running = True
 		self.id = 0													 # to make sure all agents have individual id's
 
 		# create background
-		for i in range(0, 11):
-			for j in range(0, 11):
+		for i in range(0, self.size):
+			for j in range(0, self.size):
 				if (i==5 or j ==5): # if center row/column of grid, it a road
 					self.grid.place_agent(Background(self.id, self, 'grey'), (i, j))
 				else: # if not center row/column, its grass

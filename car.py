@@ -11,7 +11,11 @@ class Car(Agent):
 		
 	# car moves by one grid forward per step
 	def move(self):
-		self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1]))
+		if(self.pos[0] == self.model.grid.width - 1):
+			self.model.schedule.remove(self)
+			self.model.grid.remove_agent(self)
+		else:
+			self.model.grid.move_agent(self, (self.pos[0]+1, self.pos[1])) #move in x direction, keep y direction
 
 	# called every step
 	def step(self):
