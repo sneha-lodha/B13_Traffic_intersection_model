@@ -53,9 +53,9 @@ class Grid(Model):
 		# if (len(list(self.grid.iter_cell_list_contents((0,5)))) < 2):
 		self.schedule.step()
 		self.addCar('east', 0, 5)
-		self.addCar('west', 12, 7)
-		self.addCar('north', 7, 0)
-		self.addCar('south', 5, 12)
+		#self.addCar('west', 12, 7)
+		#self.addCar('north', 7, 0)
+		#self.addCar('south', 5, 12)
 			# car = Car(self.id, self, 'north')						# create new car
 			# self.id+=1
 			# self.grid.place_agent(car, (5, 0	))	# add car to left side of grid
