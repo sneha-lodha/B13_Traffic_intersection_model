@@ -55,24 +55,6 @@ class Grid(Model):
 	def step(self):
 		self.schedule.step()
 		self.addCar('east', 0, 5)
-<<<<<<< HEAD
 		self.addCar('west', 12, 7)
 		self.addCar('north', 7, 0)
 		self.addCar('south', 5, 12)
-=======
-		#self.addCar('west', 12, 7)
-		#self.addCar('north', 7, 0)
-		#self.addCar('south', 5, 12)
-			# car = Car(self.id, self, 'north')						# create new car
-			# self.id+=1
-			# self.grid.place_agent(car, (5, 0	))	# add car to left side of grid
-			# self.schedule.add(car)    					# add car to schedule
-			# car = Car(self.id, self, 'east')						# create new car
-			# self.id+=1
-			# self.grid.place_agent(car, (0, 5))	# add car to left side of grid
-			# self.schedule.add(car)    					# add car to schedule
-			# car = Car(self.id, self, 'north')						# create new car
-			# self.id+=1
-			# self.grid.place_agent(car, (5, 0	))	# add car to left side of grid
-			# self.schedule.add(car)    					# add car to schedule
->>>>>>> 9487d55e91d1e471aa9d977fcab38a84c08da510
