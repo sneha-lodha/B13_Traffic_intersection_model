@@ -16,7 +16,7 @@ class Car(Agent):
 
 	# car moves by one grid forward per step
 	def move(self):
-		trafficLights = self.identifyTrafficLights()
+		trafficLights = self.model.traffic_lights
 
 		if self.direction == 'east':
 			eastLight = self.getDirectionalLight(trafficLights, 'east')
@@ -65,6 +65,7 @@ class Car(Agent):
 					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1)) #move in x direction, keep y direction
 				elif(northLight.color == 'green'):
 					self.model.grid.move_agent(self, (self.pos[0], self.pos[1]+1))
+	
 	# called every step
 	def step(self):
 		self.move()
@@ -88,13 +89,6 @@ class Car(Agent):
 				return True
 		return False
 
-	def identifyTrafficLights(self):
-		trafficLights = []
-		lightCells = list(self.model.grid.iter_cell_list_contents([(5,5),(5,7),(7,5),(7,7)]))
-		for e in lightCells:
-			if(e.type == 'light'):
-				trafficLights.append(e)
-		return trafficLights
 	# selects random color, to make it easy to see different between cars
 	def randomColor(self):
 		r = random.randint(0,255)
