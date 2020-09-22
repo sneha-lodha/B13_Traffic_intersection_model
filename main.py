@@ -59,7 +59,7 @@ def agent_portrayal(agent):
 	return portrayal
 
 # how the canvas looks
-canvas = CanvasGrid(agent_portrayal, 13, 13, 500, 500) 
+canvas = CanvasGrid(agent_portrayal, 25, 25, 750, 750) 
 
 # which grid and canvas to run
 server = ModularServer(Grid, [canvas], 'Grid')			# ,{'x':10, 'y':10}
