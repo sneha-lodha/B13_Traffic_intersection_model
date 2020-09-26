@@ -1,9 +1,12 @@
 from mesa import *
-
+from mesa.visualization.UserParam import UserSettableParameter
+from mesa.visualization.ModularVisualization import ModularServer
 from car import *
 from grid import *
 
 # Main program, determines portrayal of agents and canvas and runs server
+
+#Parameters settable by user
 
 # Set direction in which the car(arrow) points
 def setArrowDirection(agent, portrayal):
@@ -58,11 +61,13 @@ def agent_portrayal(agent):
 								}
 	return portrayal
 
+flow_slider = UserSettableParameter('slider', "% traffic flow", 15, 1, 100, 5) 
+
 # how the canvas looks
 canvas = CanvasGrid(agent_portrayal, 25, 25, 750, 750) 
 
 # which grid and canvas to run
-server = ModularServer(Grid, [canvas], 'Grid')			# ,{'x':10, 'y':10}
+server = ModularServer(Grid, [canvas], 'Traffic Flow Model', model_params= {"flow_percentage":flow_slider})			# ,{'x':10, 'y':10}
 																			
 
 server.port = 8523 # 8521 is default

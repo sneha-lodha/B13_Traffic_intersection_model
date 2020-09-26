@@ -11,12 +11,13 @@ from trafficlight import *
 
 class Grid(Model):
 	
-	def __init__(self):
+	def __init__(self, flow_percentage):
 		self.grid = MultiGrid(25, 25, False)	# grid can contain multiple agents per square
 		self.schedule = BaseScheduler(self) 	# steps are in order of addition to grid
 		self.running = True										# required to use start/stop function
 		self.id = 0														# to make sure all agents have individual id's
-		self.traffic_lights = []							# list of all traffic lights on the grid
+		self.traffic_lights = []								# list of all traffic lights on the grid
+		self.traffic_flow = flow_percentage					
 
 		self.add_roads()											# add roads to the grid
 		self.add_barriers()										# add 'barriers' in between the roads to the grid
@@ -113,7 +114,9 @@ class Grid(Model):
 
 	# add car to the grid and schedule
 	def addCar(self, direction, x, y):
-		if random.randint(1,100) < 12:  # atm 11% chance a car is added at a certain location
+		rand = random.randint(1,100)
+		print(self.traffic_flow, rand)
+		if self.traffic_flow > rand:  # atm 11% chance a car is added at a certain location
 			if (len(list(self.grid.iter_cell_list_contents((x,y)))) < 2):
 				car = Car(self.id, self, direction)				# create new car
 				self.grid.place_agent(car, (x, y))	
