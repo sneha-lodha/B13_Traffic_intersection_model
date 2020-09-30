@@ -18,12 +18,28 @@ class Grid(Model):
 		self.id = 0														# to make sure all agents have individual id's
 		self.traffic_lights = []								# list of all traffic lights on the grid
 		self.traffic_flow = flow_percentage					
+		self.counter = 0
 
 		self.add_roads()											# add roads to the grid
 		self.add_barriers()										# add 'barriers' in between the roads to the grid
 		self.finish_background()							# fill all unused space in the grid
 		self.add_traffic_lights()							# add traffic lights to the grid
 
+	def count(self):
+		self.counter += \
+		len(self.grid.get_cell_list_contents((10, 8)))  + \
+		len(self.grid.get_cell_list_contents((16, 10))) + \
+		len(self.grid.get_cell_list_contents((14, 16))) + \
+		len(self.grid.get_cell_list_contents((8, 14)))  - 4
+
+		print ("COUNT", self.counter)
+
+	def add_traffic_light(self, x, y, direction, turn = ''):
+		traffic_light = Traffic_light(self.id, self, direction, turn)
+		self.grid.place_agent(traffic_light, (x, y))
+		self.schedule.add(traffic_light)    					
+		self.id+=1
+		self.traffic_lights.append(traffic_light)
 
 	# all the roads added to the grid
 	def add_roads(self):
@@ -141,3 +157,4 @@ class Grid(Model):
 		self.addCar('south', 9, 24)
 		self.addCar('south', 10, 24)
 		self.addCar('south', 11, 24)
+		self.count()

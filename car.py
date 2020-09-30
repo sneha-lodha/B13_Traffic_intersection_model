@@ -38,9 +38,9 @@ class Car(Agent):
 			if self.can_move(self.model.grid.width - 1, 0):		# if the car can/is allowed to move
 				if self.turnAhead():														# if car has to turn
 					if self.distance < self.model.grid.width / 2:	# if the car has to turn right of left
-						self.turnSouth()														# the car has to turn right
+						self.turn('south', 0, -1)										# the car has to turn right
 					else:
-					 self.turnNorth()															# the  car has to turn left
+					 self.turn('north', 0, 1)											# the  car has to turn left
 				else:
 					self.moveForward(1, 0);												# the car moves 1 cell forward
 		# all the other 3 parts work the same, just with different variables
@@ -48,9 +48,9 @@ class Car(Agent):
 			if self.can_move(0, 0):
 				if self.turnAhead():
 					if self.distance < self.model.grid.width / 2:	
-						self.turnNorth()
+						self.turn('north', 0, 1)
 					else:
-					 self.turnSouth()
+					 self.turn('south', 0, -1)
 				else:
 					self.moveForward(-1, 0);
 		
@@ -58,9 +58,9 @@ class Car(Agent):
 			if self.can_move(self.model.grid.width - 1, 1):
 				if self.turnAhead():
 					if self.distance < self.model.grid.width / 2:
-						self.turnEast()
+						self.turn('east', 1, 0)
 					else:
-					 self.turnWest()
+					 self.turn('west', -1, 0)
 				else:
 					self.moveForward(0, 1);
 		
@@ -68,9 +68,9 @@ class Car(Agent):
 			if self.can_move(0, 1):
 				if self.turnAhead():
 					if self.distance < self.model.grid.width / 2:
-						self.turnWest()
+						self.turn('west', -1, 0)
 					else:
-					 self.turnEast()
+					 self.turn('east', 1, 0)
 				else:
 					self.moveForward(0, -1);
 
@@ -117,25 +117,10 @@ class Car(Agent):
 	def step(self):
 		self.move()
 	
-	# turn the car east
-	def turnEast(self):
-		self.direction = 'east'
-		self.moveForward(1, 0)
-
-	# turn the car west
-	def turnWest(self):
-		self.direction = 'west'
-		self.moveForward(-1, 0)
-
-	# turn the car north
-	def turnNorth(self):
-		self.direction = 'north'
-		self.moveForward(0, 1)
-
-	# turn the car south
-	def turnSouth(self):
-		self.direction = 'south'
-		self.moveForward(0, -1)
+	# general turn function
+	def turn(self, direction, x, y):
+		self.direction = direction
+		self.moveForward(x,y)
 
 	# selects random color, to make it easy to see different between cars
 	def randomColor(self):
