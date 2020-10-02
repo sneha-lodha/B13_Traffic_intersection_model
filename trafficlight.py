@@ -11,14 +11,12 @@ class Traffic_light(Agent):
 		self.time = 0										# timer counting when to go green/red
 		self.direction = direction 			# direction of the cars passing the light
 		self.turn = turn								# whether light 'indicates' a turn
-		self.on = False
-		self.count = 0
-		self.on_time = 0
 		self.flow = flow
-		self.round = False
 
 	def step(self):
-		self.timer2()
+		times = self.model.calculate_timer()
+		print(times)
+		self.timer2(times)
 
 # determines how long the light is red vs green.
 # ATM they switch per direction, so the variable turn is not yet used
@@ -50,39 +48,37 @@ class Traffic_light(Agent):
 			self.time = 0
 		self.time+=1
 
-	def timer2(self):
-		if self.count < 6:
-			self.count += 1
-		else: 
-			self.on_time = self.decide_on_time(self.flow)
-			
-			if self.time == self.on_time:
-				if self.round == True:
-					self.round = False
-				else:
-					self.round = True
-				self.time = 0
-
-			self.model.choose_light(self, self.time)
-			if self.on == True:
+	def timer2(self, times):
+		print(self.time)
+		if self.time == times[0]:
+			if self.direction == 'east':
 				self.setColor('green')
-			elif self.on == False:
+		if self.time == times[1]:
+			if self.direction == 'east':
 				self.setColor('red')
-			self.time += 1
-
-
-	def decide_on_time(self, flow):
-		if flow < 50:
-			time = 10
-		else:
-			time = 15
-		return time
+		if self.time == times[2]:
+			if self.direction == 'west':
+				self.setColor('green')	
+		if self.time == times[3]:
+			if self.direction == 'west':
+				self.setColor('red')
+		if self.time == times[4]:
+			if self.direction == 'north':
+				self.setColor('green')	
+		if self.time == times[5]:
+			if self.direction == 'north':
+				self.setColor('red')
+		if self.time == times[6]:
+			if self.direction == 'south':
+				self.setColor('green')
+		if self.time == times[7]:
+			if self.direction == 'south':
+				self.setColor('red')
+			self.time = 0
+		self.time += 1 
 
 	def setColor(self, color):
 		self.color = color
-
-	def getOnTime(self):
-		return self.on_time
 
 	def getColor(self):
 		return self.color
@@ -93,8 +89,3 @@ class Traffic_light(Agent):
 	def getDirection(self):
 		return self.direction
 
-	def turnOn(self):
-		self.on = True
-	
-	def turnOff(self):
-		self.on = False
