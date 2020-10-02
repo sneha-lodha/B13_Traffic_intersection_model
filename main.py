@@ -61,13 +61,18 @@ def agent_portrayal(agent):
 								}
 	return portrayal
 
-flow_slider = UserSettableParameter('slider', "% traffic flow", 15, 1, 100, 5) 
-
+east_flow = UserSettableParameter('slider', "% traffic flow from East", 15, 1, 100, 5) 
+west_flow = UserSettableParameter('slider', "% traffic flow from West", 15, 1, 100, 5)
+north_flow = UserSettableParameter('slider', "% traffic flow from North", 15, 1, 100, 5)
+south_flow = UserSettableParameter('slider', "% traffic flow from South", 15, 1, 100, 5)
 # how the canvas looks
 canvas = CanvasGrid(agent_portrayal, 25, 25, 750, 750) 
 
 # which grid and canvas to run
-server = ModularServer(Grid, [canvas], 'Traffic Flow Model', model_params= {"flow_percentage":flow_slider})			# ,{'x':10, 'y':10}
+server = ModularServer(Grid, [canvas], 'Traffic Flow Model', model_params= {"east_flow": east_flow, 
+																			"west_flow": west_flow, 
+																			"south_flow": south_flow, 
+																			"north_flow": north_flow})
 																			
 
 server.port = 8523 # 8521 is default

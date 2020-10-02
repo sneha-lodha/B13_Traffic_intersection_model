@@ -11,14 +11,18 @@ from trafficlight import *
 
 class Grid(Model):
 	
-	def __init__(self, flow_percentage):
+	def __init__(self, east_flow, west_flow, north_flow, south_flow):
 		self.grid = MultiGrid(25, 25, False)	# grid can contain multiple agents per square
 		self.schedule = BaseScheduler(self) 	# steps are in order of addition to grid
 		self.running = True										# required to use start/stop function
 		self.id = 0														# to make sure all agents have individual id's
 		self.traffic_lights = []								# list of all traffic lights on the grid
-		self.traffic_flow = flow_percentage					
+		self.east_flow = east_flow
+		self.west_flow = west_flow
+		self.north_flow = north_flow
+		self.south_flow = south_flow					
 		self.counter = 0
+		self.choice = 0
 
 		self.add_roads()											# add roads to the grid
 		self.add_barriers()										# add 'barriers' in between the roads to the grid
@@ -33,13 +37,6 @@ class Grid(Model):
 		len(self.grid.get_cell_list_contents((8, 14)))  - 4
 
 		print ("COUNT", self.counter)
-
-	def add_traffic_light(self, x, y, direction, turn = ''):
-		traffic_light = Traffic_light(self.id, self, direction, turn)
-		self.grid.place_agent(traffic_light, (x, y))
-		self.schedule.add(traffic_light)    					
-		self.id+=1
-		self.traffic_lights.append(traffic_light)
 
 	# all the roads added to the grid
 	def add_roads(self):
@@ -103,58 +100,82 @@ class Grid(Model):
 
   # all the traffic lights added to the grid
 	def add_traffic_lights(self):
-		self.add_traffic_light(9, 9, 'east', 'right')
-		self.add_traffic_light(9, 10, 'east')
-		self.add_traffic_light(9, 11, 'east', 'left')
+		self.add_traffic_light(9, 9, self.east_flow, 'east', 'right')
+		self.add_traffic_light(9, 10, self.east_flow, 'east')
+		self.add_traffic_light(9, 11, self.east_flow, 'east', 'left')
 
-		self.add_traffic_light(15, 13, 'west', 'left')
-		self.add_traffic_light(15, 14, 'west')
-		self.add_traffic_light(15, 15, 'west', 'right')
+		self.add_traffic_light(15, 13, self.west_flow, 'west', 'left')
+		self.add_traffic_light(15, 14, self.west_flow, 'west')
+		self.add_traffic_light(15, 15, self.west_flow, 'west', 'right')
 
-		self.add_traffic_light(13, 9, 'north', 'left')
-		self.add_traffic_light(14, 9, 'north')
-		self.add_traffic_light(15, 9, 'north', 'right')
+		self.add_traffic_light(13, 9, self.north_flow, 'north', 'left')
+		self.add_traffic_light(14, 9, self.north_flow, 'north')
+		self.add_traffic_light(15, 9, self.north_flow, 'north', 'right')
 
-		self.add_traffic_light(9, 15, 'south', 'right')
-		self.add_traffic_light(10, 15, 'south')
-		self.add_traffic_light(11, 15, 'south', 'left')
+		self.add_traffic_light(9, 15, self.south_flow, 'south', 'right')
+		self.add_traffic_light(10, 15, self.south_flow, 'south')
+		self.add_traffic_light(11, 15, self.south_flow, 'south', 'left')
 
 	# add traffic light to the grid and schedule
 	# x,y are coordinates of traffic light, direction which way its traffic goes
-	def add_traffic_light(self, x, y, direction, turn = ''):
-		traffic_light = Traffic_light(self.id, self, direction, turn)
+	def add_traffic_light(self, x, y, flow, direction, turn = ''):
+		traffic_light = Traffic_light(self.id, self, flow, direction, turn)
 		self.grid.place_agent(traffic_light, (x, y))
 		self.schedule.add(traffic_light)    					
 		self.id+=1
 		self.traffic_lights.append(traffic_light)
 
 	# add car to the grid and schedule
-	def addCar(self, direction, x, y):
+	def addCar(self, direction, x, y, flow):
 		rand = random.randint(1,100)
-		print(self.traffic_flow, rand)
-		if self.traffic_flow > rand:  # atm 11% chance a car is added at a certain location
+		if flow > rand:  # atm 11% chance a car is added at a certain location
 			if (len(list(self.grid.iter_cell_list_contents((x,y)))) < 2):
 				car = Car(self.id, self, direction)				# create new car
 				self.grid.place_agent(car, (x, y))	
 				self.schedule.add(car)    				
 				self.id += 1
 
+	def choose_light(self, light, time):
+		print(light.time)	
+		if self.choice in range(0,3) and light.getDirection() == 'east' and light.round == False:
+			print("Choice: " + str(self.choice) + ", direction: " + light.getDirection() +", time: " + str(time) + ", on time: " + str(light.getOnTime()))
+			self.choose_light_helper(light, time)
+		elif self.choice in range(3,6) and light.getDirection() == 'west' and light.round == True:
+			print("Choice: " + str(self.choice) + ", direction: " + light.getDirection() +", time: " + str(time) + ", on time: " + str(light.getOnTime()))
+			self.choose_light_helper(light, time)
+		elif self.choice in range(6,9) and light.getDirection() == 'north' and light.round == False:
+			print("Choice: " + str(self.choice) + ", direction: " + light.getDirection() +", time: " + str(time) + ", on time: " + str(light.getOnTime()))
+			self.choose_light_helper(light, time)
+		elif self.choice in range(9,12) and light.getDirection() == 'south' and light.round == True:
+			print("Choice: " + str(self.choice) + ", direction: " + light.getDirection() +", time: " + str(time) + ", on time: " + str(light.getOnTime()))
+			self.choose_light_helper(light, time)
+		if self.choice == 12:
+			self.choice = 0
+
+	def choose_light_helper(self, light, time):
+		if (time + 3) < light.getOnTime():
+			light.turnOn()
+		elif time < light.getOnTime() - 1:
+			light.turnOff()
+		else:
+			self.choice += 1
+		
   # at every step, cars may be added to the grid
 	def step(self):
 		self.schedule.step()
-		self.addCar('east', 0, 9)
-		self.addCar('east', 0, 10)
-		self.addCar('east', 0, 11)
+		self.addCar('east', 0, 9, self.east_flow)
+		self.addCar('east', 0, 10, self.east_flow)
+		self.addCar('east', 0, 11, self.east_flow)
 
-		self.addCar('west', 24, 13)
-		self.addCar('west', 24, 14)
-		self.addCar('west', 24, 15)
+		self.addCar('west', 24, 13, self.west_flow)
+		self.addCar('west', 24, 14, self.west_flow)
+		self.addCar('west', 24, 15, self.west_flow)
 		
-		self.addCar('north', 13, 0)
-		self.addCar('north', 14, 0)
-		self.addCar('north', 15, 0)
+		self.addCar('north', 13, 0, self.north_flow)
+		self.addCar('north', 14, 0, self.north_flow)
+		self.addCar('north', 15, 0, self.north_flow)
 		
-		self.addCar('south', 9, 24)
-		self.addCar('south', 10, 24)
-		self.addCar('south', 11, 24)
+		self.addCar('south', 9, 24, self.south_flow)
+		self.addCar('south', 10, 24, self.south_flow)
+		self.addCar('south', 11, 24, self.south_flow)
 		self.count()
