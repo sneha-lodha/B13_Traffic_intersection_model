@@ -36,29 +36,29 @@ def setRectDirection(agent, portrayal):
 def agent_portrayal(agent):
 	# if the agent is a car
 	if agent.getType() == 'car':
-		portrayal = {	'Shape': 'arrowHead',     # agent has shape of an arrowhead
-								'Color': agent.getColor(),  # color us different for every agent
+		portrayal = {	'Shape': 'arrowHead', # agent has shape of an arrowhead
+								'Color': agent.getColor(),    # color us different for every agent
 								'Filled': 'true',
 								'Layer': 1,
 								'scale': 0.5,
 								}
-		setArrowDirection(agent, portrayal)     # arrow points towards agents direction
+		setArrowDirection(agent, portrayal) # arrow points towards agents direction
 	# if the agent is a traffic light
 	if agent.getType() == 'light':
-		portrayal = {	'Shape': 'rect',          # agent has a rectangle shape
-								'Color': agent.getColor(),  # color depends on the agent
+		portrayal = {	'Shape': 'rect',      # agent has a rectangle shape
+								'Color': agent.getColor(),    # color depends on the agent
 								'Filled': 'true',
-								'Layer': 2,                 # highest layer, so always visible
+								'Layer': 2,                   # highest layer, so always visible
 								}
-		setRectDirection(agent, portrayal)      # set direction of the light
+		setRectDirection(agent, portrayal)  # set direction of the light
 	#if the agent is part of the background
 	if agent.getType() == 'background':
-		portrayal = {	'Shape': 'rect',          # shape is a square
+		portrayal = {	'Shape': 'rect',      # shape is a square
 								'Color': agent.getColor(),
 								'Filled': 'true',
-								'Layer': 0,                 # is lowest layer, so only background
-								'w': 1,                     # fills entire block
-								'h': 1	                    # fills entire block
+								'Layer': 0,                   # is lowest layer, so only background
+								'w': 1,                       # fills entire block
+								'h': 1	                       # fills entire block
 								}
 	return portrayal
 

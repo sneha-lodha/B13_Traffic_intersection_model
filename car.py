@@ -21,9 +21,9 @@ class Car(Agent):
 		light = self.getTrafficLight() # determine relevant traffic light
 		if self.pos[x] == edge:        # if agent has reached end of the grid
 			self.removeAgent()
-			return False                 # car cannot move, as it is gone
+			return False                  # car cannot move, as it is gone
 		if light.color == 'red' and (self.carAhead() or self.pos[x] == light.pos[x]):
-			return False                 # car cannot move forward    
+			return False                  # car cannot move forward    
 		return True                    # car can move forward
 	
 	# move agent 1 cell forward and increase travelled distance by one
@@ -34,11 +34,11 @@ class Car(Agent):
 
 	# main move loop, determines if and where the car moves
 	def move(self):
-		if self.direction == 'east':                        # if car is moving east
-			if self.can_move(self.model.grid.width - 1, 0):   # if the car can move
-				if self.turnAhead():                            # if car has to turn
+		if self.direction == 'east':                     # if car is moving east
+			if self.can_move(self.model.grid.width - 1, 0): # if the car can move
+				if self.turnAhead():                           # if car has to turn
 					if self.distance < self.model.grid.width / 2: 
-						self.turn('south', 0, -1)                   # car has to turn right
+						self.turn('south', 0, -1)                    # car has to turn right
 					else:
 					 self.turn('north', 0, 1)                     # car has to turn left
 				else:
@@ -78,12 +78,12 @@ class Car(Agent):
 	# get the correct traffic light 
 	def getTrafficLight(self):
 		for light in self.model.traffic_lights: # loop over all lights
-			if light.direction == self.direction: # light has to have same direction as car
+			if light.direction == self.direction:  # light has to have same direction as car
 				if self.direction == 'east' or self.direction == 'west':
-					if light.pos[1] == self.pos[1]:   # light has to be in same lane as car
+					if light.pos[1] == self.pos[1]:      # light has to be in same lane as car
 						return light
 				if self.direction == 'north' or self.direction == 'south':
-					if light.pos[0] == self.pos[0]:   # light has to be in same lane as car
+					if light.pos[0] == self.pos[0]:      # light has to be in same lane as car
 						return light
 
 	# look at the contents of the cell 1 position ahead
@@ -104,15 +104,15 @@ class Car(Agent):
 		for agent in cellAhead:
 			# if next cell is a barrier
 			if(agent.type == 'background' and agent.color == 'darkslategrey'):	
-				return True            # car has to make a turn
+				return True              # car has to make a turn
 		return False               # car does not have to make a turn
 
 	# check whether there is a car in the cell ahead
 	def carAhead(self):
 		cellAhead = self.lookAhead()   # get content from cell ahead
 		for agent in cellAhead:        # loop over all agents in cell ahead
-			if(agent.type == 'car'):     # the agent is a car
-				return True                # there is a car ahead
+			if(agent.type == 'car'):      # the agent is a car
+				return True                  # there is a car ahead
 		return False                   # there is no car ahead
 
 	# called every step
