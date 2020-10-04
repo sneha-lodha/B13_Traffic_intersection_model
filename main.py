@@ -4,14 +4,11 @@ from mesa.visualization.ModularVisualization import ModularServer
 from car import *
 from grid import *
 
-# Main program, determines portrayal of agents and canvas and runs server
-
-# Parameters settable by user
-
-# Set direction in which the car(arrow) points
-
+""" Main loop of the program. The code is related to the canvas, so the 
+way the grid is displayed. Also, it sets and launches the local server"""
 
 def setArrowDirection(agent, portrayal):
+ """Set direction in which the car(arrow) points"""
  if agent.getDirection() == 'north':
   portrayal['heading_x'] = 0
   portrayal['heading_y'] = 1
@@ -25,8 +22,8 @@ def setArrowDirection(agent, portrayal):
   portrayal['heading_x'] = 1
   portrayal['heading_y'] = 0
 
-# set direction of the traffic light
 def setRectDirection(agent, portrayal):
+ """Set direction of the traffic light"""
  if agent.getDirection() == 'south' or agent.getDirection() == 'north':
   portrayal['w'] = 0.8
   portrayal['h'] = 0.1
@@ -34,10 +31,8 @@ def setRectDirection(agent, portrayal):
   portrayal['w'] = 0.1
   portrayal['h'] = 0.8
 
-# portrayal of agent on the canvas
 def agent_portrayal(agent):
-
- # if the agent is a car
+ """Portrayal of agent on the canvas"""
  if agent.getType() == 'car':
   portrayal = { 'Shape': 'arrowHead', 
         'Color': agent.getColor(),    
@@ -46,7 +41,7 @@ def agent_portrayal(agent):
         'scale': 0.5,
         }
   setArrowDirection(agent, portrayal) # arrow points towards agents direction
- # if the agent is a traffic light
+
  if agent.getType() == 'light':
   portrayal = { 'Shape': 'rect',      
         'Color': agent.getColor(),    
@@ -54,12 +49,12 @@ def agent_portrayal(agent):
         'Layer': 2,                   # highest layer, so always visible
         }
   setRectDirection(agent, portrayal)  
- #if the agent is part of the background
+
  if agent.getType() == 'background':
   portrayal = { 'Shape': 'rect',      
         'Color': agent.getColor(),
         'Filled': 'true',
-        'Layer': 0,                   # is lowest layer, so only background
+        'Layer': 0,                   # lowest layer, so only background
         'w': 1,                       
         'h': 1                        
         }
