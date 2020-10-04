@@ -5,27 +5,28 @@ from mesa import *
 
 class Traffic_light(Agent):
     """Class that is responsible for the functionality of the traffic
-    lights. 
+    lights.
 
-    Each traffic light has a direction and turn and it has a color so 
+    Each traffic light has a direction and turn and it has a color so
     it can change from red to green and vice versa. If traffic lights
-    are red, cars are not allowed to pass, whereas if they are green 
+    are red, cars are not allowed to pass, whereas if they are green
     cars are allowed to pass.
 
     In this class we test different methods on determining when the lights
     change color.
     """
+
     def __init__(self, id, model, direction, turn='no turn'):
-        super().__init__(id, model)		
+        super().__init__(id, model)
         self.type = 'light'
         self.color = 'red'
-        self.time = 0								
-        self.direction = direction 			
-        self.turn = turn								
+        self.time = 0
+        self.direction = direction
+        self.turn = turn
 
     def timer1(self):
         """First timer that changes light in a brute force way, where
-        the times are already predetermined. The first naive approach 
+        the times are already predetermined. The first naive approach
         to the traffic light logic.
 
         The time variable is incremented and reset once it reaches 32 so
@@ -59,11 +60,11 @@ class Traffic_light(Agent):
         self.time += 1
 
     def timer2(self, times):
-        """Timer that is semi-brute force. 
+        """Timer that is semi-brute force.
 
         This timer when called with the calculate_timer() in the grid.py
         sets the correct intervals based on the flows of the traffic from
-        the different directions. Very similar to timer1() but times are 
+        the different directions. Very similar to timer1() but times are
         pre-calculated.
         """
         if self.time == times[0]:
@@ -108,13 +109,12 @@ class Traffic_light(Agent):
     def getDirection(self):
         """Returns the direction of the light."""
         return self.direction
-    
+
     def step(self):
         """Step function of the light called every time step.
-        
+
         Calll either with timer1() or timer2() to see how the lights in the model
         change colors.
         """
         times = self.model.calculate_timer()
         self.timer2(times)
-

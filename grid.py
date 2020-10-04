@@ -17,22 +17,22 @@ class Grid(Model):
         We use MultiGrid, which means that multiple agents can be added to the
         same cell.
 
-        Four flow parameters are passed to initalize the model. These represent 
+        Four flow parameters are passed to initalize the model. These represent
         flow of the cars from the 4 different directions in the simulation.
         """
         self.grid = MultiGrid(25, 25, False)
         self.schedule = BaseScheduler(self)
-        self.running = True										
-        self.id = 0														
-        self.traffic_lights = []							
+        self.running = True
+        self.id = 0
+        self.traffic_lights = []
         self.flows = [east_flow, west_flow, north_flow, south_flow]
         self.car_counter = 0
 
         # Adds all the different agents to the blocks in the model
-        self.add_roads()									
-        self.add_barriers()								
-        self.finish_background()							
-        self.add_traffic_lights()				
+        self.add_roads()
+        self.add_barriers()
+        self.finish_background()
+        self.add_traffic_lights()
 
     def count_cars(self):
         """ Function to count the number of cars that have cleared the model.
@@ -117,10 +117,10 @@ class Grid(Model):
                     self.add_background_agent('green', i, j)
 
     def add_traffic_light(self, x, y, direction, turn=''):
-        """Adds a traffic light to the grid and also the scheduler. 
+        """Adds a traffic light to the grid and also the scheduler.
 
         (x, y) are the coordinates of the light and direction is the direction
-        of flow that the traffic light controls. 
+        of flow that the traffic light controls.
         """
         traffic_light = Traffic_light(self.id, self, direction, turn)
         self.grid.place_agent(traffic_light, (x, y))
@@ -148,9 +148,9 @@ class Grid(Model):
 
     # add car to the grid and schedule
     def addCar(self, direction, x, y, flow):
-        """Function to add a car to grid at position (x, y) going in the 
-        given direction. 
-        
+        """Function to add a car to grid at position (x, y) going in the
+        given direction.
+
         The car is added based on the value of the flow. Higher the value of flow,
         the higher the probability of the car being added.
         """
@@ -163,8 +163,8 @@ class Grid(Model):
                 self.id += 1
 
     def calculate_on_time(self, flow):
-        """Function that given the value of the flow in a certain direction, 
-        determines how long the light should stay green. 
+        """Function that given the value of the flow in a certain direction,
+        determines how long the light should stay green.
 
         If flow higher than 50, light stay green for 16 time steps, otherwise
         only 5 time steps.
@@ -177,7 +177,7 @@ class Grid(Model):
 
     def calculate_timer(self):
         """Based on the flow of the cars from different directions, calculates the
-        times at which the lights should switch colors. 
+        times at which the lights should switch colors.
 
         Always a pause of 3 seconds between different green lights to avoid crashes.
         """
@@ -185,8 +185,9 @@ class Grid(Model):
         # Calculates on times for each direction based on flow.
         for flow in self.flows:
             on_times.append(self.calculate_on_time(flow))
-        
-        # Adding 3 determines the pause of 3 seconds between different green lights.
+
+        # Adding 3 determines the pause of 3 seconds between different green
+        # lights.
         first = 3
         second = first + on_times[0]
         third = second + 3
@@ -197,11 +198,11 @@ class Grid(Model):
         eighth = seventh + on_times[3]
 
         return [first, second, third, fourth, fifth, sixth, seventh, eighth]
-	
+
   # at every step, cars may be added to the grid
     def step(self):
-        """Step function that is automatically called at each time step of 
-        the model. 
+        """Step function that is automatically called at each time step of
+        the model.
 
         Attempt to add cars in all directions based on the flow value. And
         also count the amount of cars passed at each time step.
