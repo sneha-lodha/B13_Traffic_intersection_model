@@ -148,8 +148,8 @@ class Grid(Model):
 		return [first, second, third, fourth, fifth, sixth, seventh, eighth]
 	
 	def calculate_on_time(self, flow):
-		if flow < 50:
-			time = 5
+		if flow < 10:
+			time = 0
 		else:
 			time = 16
 		return time
