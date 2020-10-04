@@ -36,8 +36,8 @@ def setRectDirection(agent, portrayal):
 def agent_portrayal(agent):
  # if the agent is a car
  if agent.getType() == 'car':
-  portrayal = { 'Shape': 'arrowHead', # agent has shape of an arrowhead
-        'Color': agent.getColor(),    # color us different for every agent
+  portrayal = { 'Shape': 'arrowHead', 
+        'Color': agent.getColor(),    
         'Filled': 'true',
         'Layer': 1,
         'scale': 0.5,
@@ -45,20 +45,20 @@ def agent_portrayal(agent):
   setArrowDirection(agent, portrayal) # arrow points towards agents direction
  # if the agent is a traffic light
  if agent.getType() == 'light':
-  portrayal = { 'Shape': 'rect',      # agent has a rectangle shape
-        'Color': agent.getColor(),    # color depends on the agent
+  portrayal = { 'Shape': 'rect',      
+        'Color': agent.getColor(),    
         'Filled': 'true',
         'Layer': 2,                   # highest layer, so always visible
         }
-  setRectDirection(agent, portrayal)  # set direction of the light
+  setRectDirection(agent, portrayal)  
  #if the agent is part of the background
  if agent.getType() == 'background':
-  portrayal = { 'Shape': 'rect',      # shape is a square
+  portrayal = { 'Shape': 'rect',      
         'Color': agent.getColor(),
         'Filled': 'true',
         'Layer': 0,                   # is lowest layer, so only background
-        'w': 1,                       # fills entire block
-        'h': 1                        # fills entire block
+        'w': 1,                       
+        'h': 1                        
         }
  return portrayal
 

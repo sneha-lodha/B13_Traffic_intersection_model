@@ -7,14 +7,14 @@ class Car(Agent):
  def __init__(self, id, model, direction):
   super().__init__(id, model)     # required by mesa
   self.type = 'car'
-  self.color = self.randomColor() # every car is a random color
+  self.color = self.randomColor()
   self.direction = direction      # direction the car is travelling
   self.distance = 0               # distance the car has travelled
   
  # remove agent from the grid if it  reached the end
  def removeAgent(self):
-  self.model.schedule.remove(self)   # remove agent from schedule
-  self.model.grid.remove_agent(self) # remove agent from grid
+  self.model.schedule.remove(self)
+  self.model.grid.remove_agent(self)
 
  # check if car can/is allowed to move
  def can_move(self, edge, x):
@@ -29,20 +29,20 @@ class Car(Agent):
  # move agent 1 cell forward and increase travelled distance by one
  def moveForward(self, x, y):
   self.model.grid.move_agent(self, (self.pos[0] + x, self.pos[1] + y))
-  self.distance += 1 # increase travelled distance
+  self.distance += 1
 
 
  # main move loop, determines if and where the car moves
  def move(self):
-  if self.direction == 'east':                     # if car is moving east
-   if self.can_move(self.model.grid.width - 1, 0): # if the car can move
+  if self.direction == 'east':                     
+   if self.can_move(self.model.grid.width - 1, 0): 
     if self.turnAhead():                           # if car has to turn
      if self.distance < self.model.grid.width / 2: 
       self.turn('south', 0, -1)                    # car has to turn right
      else:
       self.turn('north', 0, 1)                     # car has to turn left
     else:
-     self.moveForward(1, 0)                        # the car moves forward
+     self.moveForward(1, 0)                        
   
   # all the other 3 parts work the same, just with different variables
   elif self.direction == 'west':
@@ -110,8 +110,8 @@ class Car(Agent):
  # check whether there is a car in the cell ahead
  def carAhead(self):
   cellAhead = self.lookAhead()   # get content from cell ahead
-  for agent in cellAhead:        # loop over all agents in cell ahead
-   if(agent.type == 'car'):      # the agent is a car
+  for agent in cellAhead:
+   if(agent.type == 'car'):
     return True                  # there is a car ahead
   return False                   # there is no car ahead
 
