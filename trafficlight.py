@@ -23,6 +23,7 @@ class Traffic_light(Agent):
         self.time = 0
         self.direction = direction
         self.turn = turn
+        self.demand = 0
 
     def timer1(self):
         """First timer that changes light in a brute force way, where
@@ -59,6 +60,32 @@ class Traffic_light(Agent):
             self.time = 0
         self.time += 1
 
+
+    def calculate_demand(self):
+        self.demand = 0
+        for i in range(0,5):
+            if self.direction == 'east':
+                if self.car_present(self.pos[0] - i, self.pos[1]):
+                    self.demand += 1
+            if self.direction == 'west':
+                if self.car_present(self.pos[0] + i, self.pos[1]):
+                    self.demand += 1
+            if self.direction == 'south':
+                if self.car_present(self.pos[0], self.pos[1] + i):
+                    self.demand += 1
+            if self.direction == 'north':
+                if self.car_present(self.pos[0], self.pos[1] - i):
+                    self.demand += 1
+        print (self.direction, self.pos[0], self.pos[1], self.demand)
+
+    def car_present(self, x, y):
+        cell = list(self.model.grid.iter_cell_list_contents((x, y)))
+        for agent in cell:
+            if (agent.type == 'car'):
+                return True
+        return False
+
+
     def timer2(self, times):
         """Timer that is semi-brute force.
 
@@ -94,6 +121,18 @@ class Traffic_light(Agent):
             self.time = 0
         self.time += 1
 
+
+    def timer3(self):
+        cell = list(self.model.grid.iter_cell_list_contents((0, 0)))
+        for agent in cell:
+            if (agent.type == 'controller'):
+            	controller = agent
+        if self.direction == controller.green_lights and controller.time > 7:
+        	self.setColor('green')
+        else: 
+        	self.setColor('red')
+
+
     def setColor(self, color):
         """Set the color od the light, either green or red."""
         self.color = color
@@ -116,5 +155,7 @@ class Traffic_light(Agent):
         Calll either with timer1() or timer2() to see how the lights in the model
         change colors.
         """
-        times = self.model.calculate_timer()
-        self.timer2(times)
+        # times = self.model.calculate_timer()
+        self.calculate_demand()
+        self.timer3()
+        # self.timer2(times)

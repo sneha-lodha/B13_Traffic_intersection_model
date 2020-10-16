@@ -4,8 +4,9 @@ from mesa.time import *
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
-from car import *
 from background import *
+from car import *
+from controller import *
 from trafficlight import *
 
 
@@ -33,6 +34,7 @@ class Grid(Model):
         self.add_barriers()
         self.finish_background()
         self.add_traffic_lights()
+        self.add_controller()
 
     def count_cars(self):
         """ Function to count the number of cars that have cleared the model.
@@ -46,6 +48,12 @@ class Grid(Model):
             len(self.grid.get_cell_list_contents((8, 14))) - 4
 
         print("COUNT", self.car_counter)
+
+    def add_controller(self):
+        controller = Controller(self.id, self)
+        self.schedule.add(controller)
+        self.grid.place_agent(controller, (0, 0))
+        self.id += 1
 
     def add_background_agent(self, color, x, y):
         """Function that given a color and a position (x, y) fills
@@ -147,7 +155,7 @@ class Grid(Model):
         self.add_traffic_light(11, 15, 'south', 'left')
 
     # add car to the grid and schedule
-    def addCar(self, direction, x, y, flow):
+    def add_car(self, direction, x, y, flow):
         """Function to add a car to grid at position (x, y) going in the
         given direction.
 
@@ -156,11 +164,14 @@ class Grid(Model):
         """
         rand = random.randint(1, 100)
         if flow > rand:  # atm 11% chance a car is added at a certain location
-            if (len(list(self.grid.iter_cell_list_contents((x, y)))) < 2):
-                car = Car(self.id, self, direction)				# create new car
-                self.grid.place_agent(car, (x, y))
-                self.schedule.add(car)
-                self.id += 1
+            cell = list(self.grid.iter_cell_list_contents((x, y)))
+            for agent in cell:
+                if (agent.type == 'car'):
+                    return
+            car = Car(self.id, self, direction)				# create new car
+            self.grid.place_agent(car, (x, y))
+            self.schedule.add(car)
+            self.id += 1
 
     def calculate_on_time(self, flow):
         """Function that given the value of the flow in a certain direction,
@@ -207,20 +218,21 @@ class Grid(Model):
         Attempt to add cars in all directions based on the flow value. And
         also count the amount of cars passed at each time step.
         """
+        # self.determine_light()
         self.schedule.step()
-        self.addCar('east', 0, 9, self.flows[0])
-        self.addCar('east', 0, 10, self.flows[0])
-        self.addCar('east', 0, 11, self.flows[0])
+        self.add_car('east', 0, 9, self.flows[0])
+        self.add_car('east', 0, 10, self.flows[0])
+        self.add_car('east', 0, 11, self.flows[0])
 
-        self.addCar('west', 24, 13, self.flows[1])
-        self.addCar('west', 24, 14, self.flows[1])
-        self.addCar('west', 24, 15, self.flows[1])
+        self.add_car('west', 24, 13, self.flows[1])
+        self.add_car('west', 24, 14, self.flows[1])
+        self.add_car('west', 24, 15, self.flows[1])
 
-        self.addCar('north', 13, 0, self.flows[2])
-        self.addCar('north', 14, 0, self.flows[2])
-        self.addCar('north', 15, 0, self.flows[2])
+        self.add_car('north', 13, 0, self.flows[2])
+        self.add_car('north', 14, 0, self.flows[2])
+        self.add_car('north', 15, 0, self.flows[2])
 
-        self.addCar('south', 9, 24, self.flows[3])
-        self.addCar('south', 10, 24, self.flows[3])
-        self.addCar('south', 11, 24, self.flows[3])
+        self.add_car('south', 9, 24, self.flows[3])
+        self.add_car('south', 10, 24, self.flows[3])
+        self.add_car('south', 11, 24, self.flows[3])
         self.count_cars()

@@ -45,6 +45,7 @@ def agent_portrayal(agent):
                      }
         # arrow points towards agents direction
         setArrowDirection(agent, portrayal)
+        return portrayal
 
     if agent.getType() == 'light':
         portrayal = {'Shape': 'rect',
@@ -53,6 +54,7 @@ def agent_portrayal(agent):
                      'Layer': 2,                   # highest layer, so always visible
                      }
         setRectDirection(agent, portrayal)
+        return portrayal
 
     if agent.getType() == 'background':
         portrayal = {'Shape': 'rect',
@@ -62,7 +64,7 @@ def agent_portrayal(agent):
                      'w': 1,
                      'h': 1
                      }
-    return portrayal
+        return portrayal
 
 
 # sliders that give possibility to change the traffic flow from specific
