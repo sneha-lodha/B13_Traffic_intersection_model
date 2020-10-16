@@ -116,13 +116,8 @@ class Grid(Model):
         self.add_barrier('north', 13, self.grid.height)
 
     def finish_background(self):
-        """Fills the rest of the grid where there is no background, with
-        a green background.
-        """
-        for i in range(0, self.grid.width):
-            for j in range(0, self.grid.height):
-                if self.grid.is_cell_empty([i, j]):
-                    self.add_background_agent('green', i, j)
+        """ Adds a large background agent with the same size of the grid """
+        self.add_background_agent('green', 12, 12)
 
     def add_traffic_light(self, x, y, direction, turn=''):
         """Adds a traffic light to the grid and also the scheduler.

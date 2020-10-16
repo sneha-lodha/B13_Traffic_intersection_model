@@ -40,7 +40,7 @@ def agent_portrayal(agent):
         portrayal = {'Shape': 'arrowHead',
                      'Color': agent.getColor(),
                      'Filled': 'true',
-                     'Layer': 1,
+                     'Layer': 2,
                      'scale': 0.5,
                      }
         # arrow points towards agents direction
@@ -51,16 +51,24 @@ def agent_portrayal(agent):
         portrayal = {'Shape': 'rect',
                      'Color': agent.getColor(),
                      'Filled': 'true',
-                     'Layer': 2,                   # highest layer, so always visible
+                     'Layer': 3,                   # highest layer, so always visible
                      }
         setRectDirection(agent, portrayal)
         return portrayal
 
     if agent.getType() == 'background':
+        if agent.getColor() == 'green':
+            portrayal = { 'Shape': 'rect',      
+            'Color': agent.getColor(),'Filled': 'true',
+            'Layer': 0,                   # lowest layer, so only background
+            'w': 25,                       
+            'h': 25                        
+            }
+            return portrayal
         portrayal = {'Shape': 'rect',
                      'Color': agent.getColor(),
                      'Filled': 'true',
-                     'Layer': 0,                   # lowest layer, so only background
+                     'Layer': 1,                   # lowest layer, so only background
                      'w': 1,
                      'h': 1
                      }

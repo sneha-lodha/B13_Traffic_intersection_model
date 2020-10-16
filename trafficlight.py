@@ -63,7 +63,7 @@ class Traffic_light(Agent):
 
     def calculate_demand(self):
         self.demand = 0
-        for i in range(0,5):
+        for i in range(0,7):
             if self.direction == 'east':
                 if self.car_present(self.pos[0] - i, self.pos[1]):
                     self.demand += 1
