@@ -14,6 +14,7 @@ class Car(Agent):
         self.color = self.randomColor()
         self.direction = direction      # direction the car is travelling
         self.distance = 0               # distance the car has travelled
+        self.delay = 0
 
     def remove_agent(self):
         """Remove agent from the grid if it reached the end"""
@@ -28,6 +29,7 @@ class Car(Agent):
             return False                  # car cannot move, as it is gone
         if light.color == 'red' and (
                 self.carAhead() or self.pos[x] == light.pos[x]):
+            self.delay += 1
             return False                  # car cannot move forward
         return True                    # car can move forward
 

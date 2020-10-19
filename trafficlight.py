@@ -24,6 +24,7 @@ class Traffic_light(Agent):
         self.direction = direction
         self.turn = turn
         self.demand = 0
+        self.car_waiting = False
 
     def timer1(self):
         """First timer that changes light in a brute force way, where
@@ -59,32 +60,6 @@ class Traffic_light(Agent):
                 self.setColor('green')
             self.time = 0
         self.time += 1
-
-
-    def calculate_demand(self):
-        self.demand = 0
-        for i in range(0,7):
-            if self.direction == 'east':
-                if self.car_present(self.pos[0] - i, self.pos[1]):
-                    self.demand += 1
-            if self.direction == 'west':
-                if self.car_present(self.pos[0] + i, self.pos[1]):
-                    self.demand += 1
-            if self.direction == 'south':
-                if self.car_present(self.pos[0], self.pos[1] + i):
-                    self.demand += 1
-            if self.direction == 'north':
-                if self.car_present(self.pos[0], self.pos[1] - i):
-                    self.demand += 1
-        print (self.direction, self.pos[0], self.pos[1], self.demand)
-
-    def car_present(self, x, y):
-        cell = list(self.model.grid.iter_cell_list_contents((x, y)))
-        for agent in cell:
-            if (agent.type == 'car'):
-                return True
-        return False
-
 
     def timer2(self, times):
         """Timer that is semi-brute force.
@@ -123,6 +98,8 @@ class Traffic_light(Agent):
 
 
     def timer3(self):
+        """Check with the controller whether the light should be green or red.
+        The 7 second pause assurres there are no collisions between cars"""
         cell = list(self.model.grid.iter_cell_list_contents((0, 0)))
         for agent in cell:
             if (agent.type == 'controller'):
@@ -131,6 +108,44 @@ class Traffic_light(Agent):
         	self.setColor('green')
         else: 
         	self.setColor('red')
+
+    def calculate_demand(self):
+        """Calculate the demand of the traffic light. The demand is calculated
+        as the amount of cars that are in the 10 cells in front of the light"""
+        self.demand = 0
+        self.car_waiting = False
+        for i in range(0,10):
+            if self.direction == 'east':
+                if self.car_present(self.pos[0] - i, self.pos[1]):
+                    self.demand += 1
+                    if i == 0:
+                        self.car_waiting = True
+            if self.direction == 'west':
+                if self.car_present(self.pos[0] + i, self.pos[1]):
+                    self.demand += 1
+                    if i == 0:
+                        self.car_waiting = True
+            if self.direction == 'south':
+                if self.car_present(self.pos[0], self.pos[1] + i):
+                    self.demand += 1
+                    if i == 0:
+                        self.car_waiting = True
+            if self.direction == 'north':
+                if self.car_present(self.pos[0], self.pos[1] - i):
+                    self.demand += 1
+                    if i == 0:
+                        self.car_waiting = True
+        print (self.direction, self.pos[0], self.pos[1], self.demand)
+
+    def car_present(self, x, y):
+        """Return whether there is a car 
+        at the location of the traffic light"""
+        cell = list(self.model.grid.iter_cell_list_contents((x, y)))
+        for agent in cell:
+            if (agent.type == 'car'):
+                return True
+        return False
+
 
 
     def setColor(self, color):
@@ -148,6 +163,15 @@ class Traffic_light(Agent):
     def getDirection(self):
         """Returns the direction of the light."""
         return self.direction
+
+    def get_car_waiting(self):
+        return self.car_waiting
+
+    def get_direction(self):
+        return self.direction
+
+    def get_demand(self):
+        return self.demand
 
     def step(self):
         """Step function of the light called every time step.
