@@ -14,6 +14,7 @@ class Car(Agent):
         self.color = self.randomColor()
         self.direction = direction      # direction the car is travelling
         self.distance = 0               # distance the car has travelled
+        self.travel_time = 0
 
     def remove_agent(self):
         """Remove agent from the grid if it reached the end"""
@@ -134,6 +135,7 @@ class Car(Agent):
     def step(self):
         """Called every step for every individual car"""
         self.move()
+        self.travel_time += 1
 
     def turn(self, direction, x, y):
         """General turn function"""

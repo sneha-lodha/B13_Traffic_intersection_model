@@ -152,10 +152,10 @@ class Traffic_light(Agent):
     def step(self):
         """Step function of the light called every time step.
 
-        Calll either with timer1() or timer2() to see how the lights in the model
+        Call either with timer1() or timer2() to see how the lights in the model
         change colors.
         """
         # times = self.model.calculate_timer()
+        # self.timer2(times)
         self.calculate_demand()
         self.timer3()
-        # self.timer2(times)
