@@ -1,6 +1,8 @@
 from mesa import *
 from mesa.visualization.modules import ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
+from mesa.visualization.ModularVisualization import ModularServer
+
 from car import *
 from grid import *
 
@@ -88,11 +90,14 @@ south_flow = UserSettableParameter(
 
 # how the canvas looks
 canvas = CanvasGrid(agent_portrayal, 25, 25, 750, 750)
-
+chartTT = ChartModule([{"Label": "Avg travel time","Color": "Black"}],
+                    data_collector_name='dctt')
+chartCC = ChartModule([{"Label": "Car count","Color": "Blue"}],
+                    data_collector_name='dccc')
 # which grid and canvas to run
 server = ModularServer(
     Grid,
-    [canvas],
+    [canvas, chartTT, chartCC],
     'Traffic Flow Model',
     model_params={
         "east_flow": east_flow,

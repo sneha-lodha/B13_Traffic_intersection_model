@@ -3,6 +3,7 @@ from mesa.space import *
 from mesa.time import *
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
+from mesa.datacollection import DataCollector
 
 from background import *
 from car import *
@@ -27,6 +28,10 @@ class Grid(Model):
         self.traffic_lights = []
         self.flows = [east_flow, west_flow, north_flow, south_flow]
         self.car_counter = 0
+        self.travel_times = []
+        self.average_travel_time = 0
+        self.dctt = DataCollector(model_reporters={"Avg travel time": lambda model: model.average_travel_time})
+        self.dccc = DataCollector(model_reporters={"Car count": lambda model: model.car_counter})
 
         # Adds all the different agents to the blocks in the model
         self.add_roads()
@@ -41,14 +46,30 @@ class Grid(Model):
         and left the screen.
         """
         self.car_counter += \
-            len(self.grid.get_cell_list_contents((10, 8))) + \
-            len(self.grid.get_cell_list_contents((16, 10))) + \
-            len(self.grid.get_cell_list_contents((14, 16))) + \
-            len(self.grid.get_cell_list_contents((8, 14))) - 4
+            len(self.grid.get_cell_list_contents((0, 14))) + \
+            len(self.grid.get_cell_list_contents((10, 0))) + \
+            len(self.grid.get_cell_list_contents((24, 10))) + \
+            len(self.grid.get_cell_list_contents((14, 24))) - 4
 
         print("COUNT", self.car_counter)
         return self.car_counter
 
+    def calculate_average_travel_time(self):
+        all_agents = []
+        all_agents += self.grid.get_cell_list_contents((0,14))
+        all_agents += self.grid.get_cell_list_contents((10,0))
+        all_agents += self.grid.get_cell_list_contents((24,10))
+        all_agents += self.grid.get_cell_list_contents((14,24))
+        for agent in all_agents:
+            if (agent.type == "car"):
+                self.travel_times.append(agent.travel_time)
+        if len(self.travel_times) != 0:
+            self.average_travel_time = sum(self.travel_times)/len(self.travel_times)
+            print ("Average travel time of cars is:", self.average_travel_time)
+        else:
+            print ("No cars have passed yet")
+            return 0
+    
     def add_controller(self):
         controller = Controller(self.id, self)
         self.schedule.add(controller)
@@ -205,6 +226,7 @@ class Grid(Model):
 
         return [first, second, third, fourth, fifth, sixth, seventh, eighth]
 
+
   # at every step, cars may be added to the grid
     def step(self):
         """Step function that is automatically called at each time step of
@@ -230,3 +252,6 @@ class Grid(Model):
         self.add_car('south', 10, 24, self.flows[3])
         self.add_car('south', 11, 24, self.flows[3])
         self.count_cars()
+        self.calculate_average_travel_time()
+        self.dctt.collect(self)
+        self.dccc.collect(self)
