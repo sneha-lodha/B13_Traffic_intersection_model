@@ -1,7 +1,8 @@
 from mesa import *
+from mesa.visualization.modules import ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
 from mesa.visualization.ModularVisualization import ModularServer
-from mesa.visualization.modules import ChartModule
+
 from car import *
 from grid import *
 

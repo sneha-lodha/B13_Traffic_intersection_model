@@ -10,7 +10,6 @@ from car import *
 from controller import *
 from trafficlight import *
 
-
 class Grid(Model):
     def __init__(self, east_flow, west_flow, north_flow, south_flow):
         """The Grid class deals with the actual model of the whole simulation
@@ -53,6 +52,7 @@ class Grid(Model):
             len(self.grid.get_cell_list_contents((14, 24))) - 4
 
         print("COUNT", self.car_counter)
+        return self.car_counter
 
     def calculate_average_wait_time(self):
         all_agents = []
@@ -235,7 +235,6 @@ class Grid(Model):
         Attempt to add cars in all directions based on the flow value. And
         also count the amount of cars passed at each time step.
         """
-        # self.determine_light()
         self.schedule.step()
         self.add_car('east', 0, 9, self.flows[0])
         self.add_car('east', 0, 10, self.flows[0])
