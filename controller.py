@@ -7,6 +7,8 @@ class Controller(Agent):
         self.type = 'controller'
         self.green_lights = 'east'
         self.time = 0
+        self.delay_limit = 60
+
 
     def determine_light(self):
         """Determine which combination of lights has the highest demand.
@@ -14,11 +16,12 @@ class Controller(Agent):
         self.time += 1
         demands = self.combine_demands()
         highest_demand = max(demands, key=demands.get)
-        print(demands[self.green_lights], demands[highest_demand])
-        if demands[self.green_lights] < demands[highest_demand] - 6 :
-            if not self.car_waiting():
-                self.green_lights = highest_demand
-                self.time = 0
+        self.check_delay_limit()
+        if not self.car_waiting_long():
+            if demands[self.green_lights] < demands[highest_demand] - 6 :
+                if not self.car_waiting():
+                    self.green_lights = highest_demand
+                    self.time = 0
 
     def car_waiting(self):
         for light in self.model.traffic_lights:
@@ -28,7 +31,22 @@ class Controller(Agent):
         return True
         
 
+    def check_delay_limit(self):
+        if self.delay_limit > 60:
+            for light in self.model.traffic_lights:
+                if light.get_waiting_time() > self.delay_limit - 16:
+                    return
+            self.delay_limit -= 16
 
+    def car_waiting_long(self):
+        for light in self.model.traffic_lights:
+            if light.get_waiting_time() > self.delay_limit:
+                self.green_lights = light.get_direction()
+                if self.time > 8:
+                    self.time = 0
+                    self.delay_limit += 16
+                return True
+        return False
 
     def combine_demands(self):
         """Combine the demands of the individual lights 

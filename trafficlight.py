@@ -24,6 +24,7 @@ class Traffic_light(Agent):
         self.direction = direction
         self.turn = turn
         self.demand = 0
+        self.waiting_time = 0
         self.car_waiting = False
 
     def timer1(self):
@@ -105,7 +106,8 @@ class Traffic_light(Agent):
             if (agent.type == 'controller'):
             	controller = agent
         if self.direction == controller.green_lights and controller.time > 7:
-        	self.setColor('green')
+            self.setColor('green')
+            self.waiting_time = 0
         else: 
         	self.setColor('red')
 
@@ -117,25 +119,16 @@ class Traffic_light(Agent):
         for i in range(0,10):
             if self.direction == 'east':
                 if self.car_present(self.pos[0] - i, self.pos[1]):
-                    self.demand += 1
-                    if i == 0:
-                        self.car_waiting = True
+                    self.update_variables(i)
             if self.direction == 'west':
                 if self.car_present(self.pos[0] + i, self.pos[1]):
-                    self.demand += 1
-                    if i == 0:
-                        self.car_waiting = True
+                    self.update_variables(i)
             if self.direction == 'south':
                 if self.car_present(self.pos[0], self.pos[1] + i):
-                    self.demand += 1
-                    if i == 0:
-                        self.car_waiting = True
+                    self.update_variables(i)
             if self.direction == 'north':
                 if self.car_present(self.pos[0], self.pos[1] - i):
-                    self.demand += 1
-                    if i == 0:
-                        self.car_waiting = True
-        print (self.direction, self.pos[0], self.pos[1], self.demand)
+                    self.update_variables(i)
 
     def car_present(self, x, y):
         """Return whether there is a car 
@@ -146,6 +139,11 @@ class Traffic_light(Agent):
                 return True
         return False
 
+    def update_variables(self, i):
+        self.demand += 1
+        if i == 0:
+            self.car_waiting = True
+            self.waiting_time += 1
 
 
     def setColor(self, color):
@@ -172,6 +170,9 @@ class Traffic_light(Agent):
 
     def get_demand(self):
         return self.demand
+
+    def get_waiting_time(self):
+        return self.waiting_time
 
     def step(self):
         """Step function of the light called every time step.
