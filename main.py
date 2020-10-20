@@ -89,7 +89,7 @@ south_flow = UserSettableParameter(
 
 # how the canvas looks
 canvas = CanvasGrid(agent_portrayal, 25, 25, 750, 750)
-chartTT = ChartModule([{"Label": "Avg travel time","Color": "Black"}],
+chartTT = ChartModule([{"Label": "Avg wait time","Color": "Black"}],
                     data_collector_name='dctt')
 chartCC = ChartModule([{"Label": "Car count","Color": "Blue"}],
                     data_collector_name='dccc')

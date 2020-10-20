@@ -29,9 +29,9 @@ class Grid(Model):
         self.traffic_lights = []
         self.flows = [east_flow, west_flow, north_flow, south_flow]
         self.car_counter = 0
-        self.travel_times = []
-        self.average_travel_time = 0
-        self.dctt = DataCollector(model_reporters={"Avg travel time": lambda model: model.average_travel_time})
+        self.wait_times = []
+        self.average_wait_time = 0
+        self.dctt = DataCollector(model_reporters={"Avg wait time": lambda model: model.average_wait_time})
         self.dccc = DataCollector(model_reporters={"Car count": lambda model: model.car_counter})
 
         # Adds all the different agents to the blocks in the model
@@ -54,7 +54,7 @@ class Grid(Model):
 
         print("COUNT", self.car_counter)
 
-    def calculate_average_travel_time(self):
+    def calculate_average_wait_time(self):
         all_agents = []
         all_agents += self.grid.get_cell_list_contents((0,14))
         all_agents += self.grid.get_cell_list_contents((10,0))
@@ -62,10 +62,10 @@ class Grid(Model):
         all_agents += self.grid.get_cell_list_contents((14,24))
         for agent in all_agents:
             if (agent.type == "car"):
-                self.travel_times.append(agent.travel_time)
-        if len(self.travel_times) != 0:
-            self.average_travel_time = sum(self.travel_times)/len(self.travel_times)
-            print ("Average travel time of cars is:", self.average_travel_time)
+                self.wait_times.append(agent.wait_time)
+        if len(self.wait_times) != 0:
+            self.average_wait_time = sum(self.wait_times)/len(self.wait_times)
+            print ("Average travel time of cars is:", self.average_wait_time)
         else:
             print ("No cars have passed yet")
             return 0
@@ -253,6 +253,6 @@ class Grid(Model):
         self.add_car('south', 10, 24, self.flows[3])
         self.add_car('south', 11, 24, self.flows[3])
         self.count_cars()
-        self.calculate_average_travel_time()
+        self.calculate_average_wait_time()
         self.dctt.collect(self)
         self.dccc.collect(self)

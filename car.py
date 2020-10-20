@@ -14,7 +14,7 @@ class Car(Agent):
         self.color = self.randomColor()
         self.direction = direction      # direction the car is travelling
         self.distance = 0               # distance the car has travelled
-        self.travel_time = 0
+        self.wait_time = 0
 
     def remove_agent(self):
         """Remove agent from the grid if it reached the end"""
@@ -50,6 +50,8 @@ class Car(Agent):
                         self.turn('north', 0, 1)
                 else:
                     self.move_forward(1, 0)
+            else:
+                self.wait_time += 1
 
         # all the other 3 parts work the same, just with different variables
         elif self.direction == 'west':
@@ -61,6 +63,8 @@ class Car(Agent):
                         self.turn('south', 0, -1)
                 else:
                     self.move_forward(-1, 0)
+            else:
+                self.wait_time += 1
 
         elif self.direction == 'north':
             if self.can_move(self.model.grid.width - 1, 1):
@@ -71,6 +75,8 @@ class Car(Agent):
                         self.turn('west', -1, 0)
                 else:
                     self.move_forward(0, 1)
+            else:
+                self.wait_time += 1
 
         elif self.direction == 'south':
             if self.can_move(0, 1):
@@ -81,6 +87,8 @@ class Car(Agent):
                         self.turn('east', 1, 0)
                 else:
                     self.move_forward(0, -1)
+            else: 
+                self.wait_time += 1
 
     def getTrafficLight(self):
         """Get the correct traffic light"""
@@ -135,7 +143,6 @@ class Car(Agent):
     def step(self):
         """Called every step for every individual car"""
         self.move()
-        self.travel_time += 1
 
     def turn(self, direction, x, y):
         """General turn function"""
