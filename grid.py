@@ -11,7 +11,7 @@ from controller import *
 from trafficlight import *
 
 class Grid(Model):
-    def __init__(self, east_flow, west_flow, north_flow, south_flow):
+    def __init__(self, east_flow, west_flow, north_flow, south_flow, system):
         """The Grid class deals with the actual model of the whole simulation
         and add all the agents to the grid and initializes the model.
 
@@ -32,6 +32,7 @@ class Grid(Model):
         self.average_wait_time = 0
         self.dctt = DataCollector(model_reporters={"Avg wait time": lambda model: model.average_wait_time})
         self.dccc = DataCollector(model_reporters={"Car count": lambda model: model.car_counter})
+        self.system = system
 
         # Adds all the different agents to the blocks in the model
         self.add_roads()

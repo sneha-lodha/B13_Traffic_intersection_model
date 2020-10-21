@@ -79,6 +79,8 @@ def agent_portrayal(agent):
 
 # sliders that give possibility to change the traffic flow from specific
 # direction
+light_system = UserSettableParameter('choice', 'Traffic system', value='Fixed time',
+	choices=['Fixed time', 'Flow based', 'Demand based'])
 east_flow = UserSettableParameter(
     'slider', "% traffic flow from East", 15, 1, 100, 5)
 west_flow = UserSettableParameter(
@@ -103,7 +105,8 @@ server = ModularServer(
         "east_flow": east_flow,
         "west_flow": west_flow,
         "south_flow": south_flow,
-        "north_flow": north_flow})
+        "north_flow": north_flow,
+        "system": light_system})
 
 server.port = 8523  # 8521 is default
 server.launch()

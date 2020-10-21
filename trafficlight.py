@@ -180,7 +180,11 @@ class Traffic_light(Agent):
         Call either with timer1() or timer2() to see how the lights in the model
         change colors.
         """
-        # times = self.model.calculate_timer()
-        # self.timer2(times)
-        self.calculate_demand()
-        self.timer3()
+        if self.model.system == 'Fixed time':
+        	self.timer1()
+        if self.model.system == 'Flow based':
+        	times = self.model.calculate_timer()
+        	self.timer2(times)
+        if self.model.system == 'Demand based':
+        	self.calculate_demand()
+        	self.timer3()
