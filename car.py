@@ -152,11 +152,9 @@ class Car(Agent):
 
     def randomColor(self):
         """Selects random color, to make it easy to see different between cars"""
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
-        return '#{:02x}{:02x}{:02x}'.format(
-            r, g, b)  # transform to HTML color code
+        colors = ['black', 'yellow', 'blue', 'brown', 'white'] 
+        x = random.randint(0, 3)
+        return colors[x - 1]
 
     def getColor(self):
         """Get the color of the car"""
