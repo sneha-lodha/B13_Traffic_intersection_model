@@ -198,9 +198,9 @@ class Grid(Model):
         only 5 time steps.
         """
         if flow < 50:
-            time = 5
+            time = 10
         else:
-            time = 16
+            time = 20
         return time
 
     def calculate_timer(self):
@@ -214,15 +214,15 @@ class Grid(Model):
         for flow in self.flows:
             on_times.append(self.calculate_on_time(flow))
 
-        # Adding 3 determines the pause of 3 seconds between different green
+        # Adding 10 determines the pause of 10 seconds between different green
         # lights.
-        first = 3
+        first = 10
         second = first + on_times[0]
-        third = second + 3
+        third = second + 10
         fourth = third + on_times[1]
-        fifth = fourth + 3
+        fifth = fourth + 10
         sixth = fifth + on_times[2]
-        seventh = sixth + 3
+        seventh = sixth + 10
         eighth = seventh + on_times[3]
 
         return [first, second, third, fourth, fifth, sixth, seventh, eighth]
