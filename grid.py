@@ -216,13 +216,13 @@ class Grid(Model):
 
         # Adding 10 determines the pause of 10 seconds between different green
         # lights.
-        first = 10
+        first = 8
         second = first + on_times[0]
-        third = second + 10
+        third = second + 8
         fourth = third + on_times[1]
-        fifth = fourth + 10
+        fifth = fourth + 8
         sixth = fifth + on_times[2]
-        seventh = sixth + 10
+        seventh = sixth + 8
         eighth = seventh + on_times[3]
 
         return [first, second, third, fourth, fifth, sixth, seventh, eighth]
