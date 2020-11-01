@@ -12,6 +12,13 @@ from trafficlight import Traffic_light
 
 
 class Grid(Model):
+    """A model of a four way intersection. Cars can depart from every
+    direction, and can travel in any of the three other directions.
+    The flow of traffic coming from any of the four directions can be
+    controlled through the use of the sliders. Each of the lanes features a
+    traffic light which periodically turns green. The user determines whether
+    the fixed time, flow based, or demand based system is used.
+    """
 
     def __init__(self, east_flow, west_flow, north_flow, south_flow, system):
         """The Grid class deals with the actual model of the whole simulation
@@ -38,7 +45,7 @@ class Grid(Model):
             "Car count": lambda model: model.car_counter})
         self.system = system
 
-        # Adds all the different agents to the blocks in the model
+        # Add all the different agents to the blocks in the model
         self.add_roads()
         self.add_barriers()
         self.finish_background()
@@ -60,6 +67,9 @@ class Grid(Model):
         return self.car_counter
 
     def calculate_average_wait_time(self):
+        """Calculate the average waiting time of all the cars that are
+        currently and were previously on the grid
+        """
         all_agents = []
         all_agents += self.grid.get_cell_list_contents((0, 14))
         all_agents += self.grid.get_cell_list_contents((10, 0))
@@ -76,9 +86,10 @@ class Grid(Model):
             return 0
 
     def add_controller(self):
+        """Add the controller of the demand based system to the grid"""
         controller = Controller(self.id, self)
         self.schedule.add(controller)
-        self.grid.place_agent(controller, (0, 0))
+        self.grid.place_agent(controller, (0, 0))   # makes it easier to find
         self.id += 1
 
     def add_background_agent(self, color, x, y):
@@ -120,9 +131,7 @@ class Grid(Model):
         self.add_road('north', 11, 10, self.grid.height)
 
     def add_barrier(self, direction, position, length):
-        """Adds the dark gray background agent to the road acting
-        as barriers on which cars cannot go on top of.
-        """
+        """Add a single barrier to the grid"""
         for i in range(0, length):
             if direction == 'east':
                 if self.grid.is_cell_empty([i, position]):
@@ -132,7 +141,7 @@ class Grid(Model):
                     self.add_background_agent('darkslategrey', position, i)
 
     def add_barriers(self):
-        """Function that adds all the barriers to the simulation"""
+        """Calls add_barrier() to add all the barriers to the grid"""
         self.add_barrier('east', 11, self.grid.width)
         self.add_barrier('east', 12, self.grid.width)
         self.add_barrier('east', 13, self.grid.width)
@@ -146,7 +155,7 @@ class Grid(Model):
         self.add_background_agent('green', 12, 12)
 
     def add_traffic_light(self, x, y, direction, turn=''):
-        """Adds a traffic light to the grid and also the scheduler.
+        """Adds a traffic light to the grid and the scheduler.
 
         (x, y) are the coordinates of the light and direction is the direction
         of flow that the traffic light controls.
@@ -158,7 +167,7 @@ class Grid(Model):
         self.traffic_lights.append(traffic_light)
 
     def add_traffic_lights(self):
-        """Function to add all the traffic lights to the grid"""
+        """Add all the traffic lights to the grid"""
         self.add_traffic_light(9, 9, 'east', 'right')
         self.add_traffic_light(9, 10, 'east')
         self.add_traffic_light(9, 11, 'east', 'left')
@@ -175,20 +184,19 @@ class Grid(Model):
         self.add_traffic_light(10, 15, 'south')
         self.add_traffic_light(11, 15, 'south', 'left')
 
-    # add car to the grid and schedule
     def add_car(self, direction, x, y, flow):
         """Function to add a car to grid at position (x, y) going in the
         given direction.
 
-        The car is added based on the value of the flow.
+        The chance a car is added is based on the value of the flow.
         """
         rand = random.randint(1, 100)
-        if flow > rand:  # atm 11% chance a car is added at a certain location
+        if flow > rand:
             cell = list(self.grid.iter_cell_list_contents((x, y)))
             for agent in cell:
                 if (agent.type == 'car'):
                     return
-            car = Car(self.id, self, direction)             # create new car
+            car = Car(self.id, self, direction)     # create new car
             self.grid.place_agent(car, (x, y))
             self.schedule.add(car)
             self.id += 1
@@ -197,8 +205,8 @@ class Grid(Model):
         """Function that given the value of the flow in a certain direction,
         determines how long the light should stay green.
 
-        If flow higher than 50, light stay green for 16 time steps, otherwise
-        only 5 time steps.
+        If the flow is higher than 50, the light stays green for 20 time
+        steps, otherwise for only 10 time steps.
         """
         if flow < 50:
             time = 10
@@ -210,15 +218,14 @@ class Grid(Model):
         """Based on the flow of the cars from different directions,
         calculates the times at which the lights should switch colors.
 
-        Always a pause of 3 seconds between green lights to avoid crashes.
+        Always a pause of 8 seconds between green lights to avoid crashes.
         """
         on_times = []
         # Calculates on times for each direction based on flow.
         for flow in self.flows:
             on_times.append(self.calculate_on_time(flow))
 
-        # Adding 10 determines the pause of 10 seconds between different green
-        # lights.
+        # Adding 8 is the pause of 8 seconds between different green lights.
         first = 8
         second = first + on_times[0]
         third = second + 8
@@ -230,13 +237,13 @@ class Grid(Model):
 
         return [first, second, third, fourth, fifth, sixth, seventh, eighth]
 
-    # at every step, cars may be added to the grid
     def step(self):
         """Step function that is automatically called at each time step of
         the model.
 
-        Attempt to add cars in all directions based on the flow value. And
-        also count the amount of cars passed at each time step.
+        Attempt to add cars in all directions based on the flow value.
+        Also count the amount of cars passed and update the average
+        wait time and the car count
         """
         self.schedule.step()
         self.add_car('east', 0, 9, self.flows[0])

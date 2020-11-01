@@ -11,7 +11,7 @@ class Car(Agent):
     def __init__(self, id, model, direction):
         super().__init__(id, model)     # required by mesa
         self.type = 'car'
-        self.color = self.randomColor()
+        self.color = self.set_color()
         self.direction = direction      # direction the car is travelling
         self.distance = 0               # distance the car has travelled
         self.wait_time = 0
@@ -23,12 +23,12 @@ class Car(Agent):
 
     def can_move(self, edge, x):
         """Check if a car can/is allowed to move"""
-        light = self.getTrafficLight()  # determine relevant traffic light
+        light = self.get_traffic_light()  # determine relevant traffic light
         if self.pos[x] == edge:        # if agent has reached end of the grid
             self.remove_agent()
             return False                  # car cannot move, as it is gone
         if light.color == 'red' and (
-                self.carAhead() or self.pos[x] == light.pos[x]):
+                self.car_ahead() or self.pos[x] == light.pos[x]):
             return False                  # car cannot move forward
         return True                    # car can move forward
 
@@ -90,7 +90,7 @@ class Car(Agent):
             else:
                 self.wait_time += 1
 
-    def getTrafficLight(self):
+    def get_traffic_light(self):
         """Get the correct traffic light"""
         for light in self.model.traffic_lights:  # loop over all lights
             # if light has same direction as car
@@ -104,7 +104,7 @@ class Car(Agent):
                     if light.pos[0] == self.pos[0]:
                         return light
 
-    def lookAhead(self):
+    def look_ahead(self):
         """Look at the contents of the cell 1 position ahead"""
         if(self.direction == 'east'):
             cellContents = list(
@@ -126,16 +126,16 @@ class Car(Agent):
 
     def turn_ahead(self):
         """Check whether the car has to make a turn"""
-        cellAhead = self.lookAhead()
+        cellAhead = self.look_ahead()
         for agent in cellAhead:
             # if next cell is a barrier
             if(agent.type == 'background' and agent.color == 'darkslategrey'):
                 return True              # car has to make a turn
         return False               # car does not have to make a turn
 
-    def carAhead(self):
+    def car_ahead(self):
         """Check whether there is a car in the cell ahead"""
-        cellAhead = self.lookAhead()   # get content from cell ahead
+        cellAhead = self.look_ahead()   # get content from cell ahead
         for agent in cellAhead:
             if(agent.type == 'car'):
                 return True                  # there is a car ahead
@@ -151,20 +151,20 @@ class Car(Agent):
         # move one cell forward in new direction
         self.move_forward(x, y)
 
-    def randomColor(self):
-        """Selects a colorfor the car"""
+    def set_color(self):
+        """Selects a color for the car"""
         colors = ['black', 'yellow', 'blue', 'brown', 'white']
         x = random.randint(0, 3)
         return colors[x - 1]
 
-    def getColor(self):
+    def get_color(self):
         """Get the color of the car"""
         return self.color
 
-    def getType(self):
+    def get_type(self):
         """Get the type of the car"""
         return self.type
 
-    def getDirection(self):
+    def get_direction(self):
         """Get the direction of the car"""
         return self.direction

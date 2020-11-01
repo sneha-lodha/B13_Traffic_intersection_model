@@ -1,7 +1,6 @@
 from mesa import Agent
 
 
-# Background blocks used in the grid
 class Background(Agent):
     """Simple class responsible for the background agents. These agents do
     not have much functionality except setting the background color of
@@ -13,10 +12,10 @@ class Background(Agent):
         self.type = 'background'
         self.color = color
 
-    def getColor(self):
+    def get_color(self):
         """Return the color of the current background agent in the cell."""
         return self.color
 
-    def getType(self):
+    def get_type(self):
         """Return the type background as the type of agent."""
         return self.type
