@@ -9,8 +9,9 @@ traffic light which periodically turns green. The user determines whether
 the fixed time, flow based, or demand based system is used. 
 Because of the way Mesa works, all the input from the user is applied when the model is reset.
 
-To run: python3 main.py
+To run:  
+python3 main.py  
 
-Requires:
-Mesa 0.8.7
-Python 3.8.5
+Requires:  
+Mesa 0.8.7  
+Python 3.8.5  
