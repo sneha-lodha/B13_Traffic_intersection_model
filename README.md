@@ -6,8 +6,8 @@ direction, and can travel in any of the three other directions.
 The flow of traffic coming from any of the four directions can be
 controlled through the use of the sliders. Each of the lanes features a
 traffic light which periodically turns green. The user determines whether
-the fixed time, flow based, or demand based system is used. 
-Because of the way Mesa works, all the input from the user is applied when the model is reset.
+the fixed time, flow based, or demand based system is used.   
+Because of the way Mesa works, the input from the user is applied when the simulation is reset.
 
 To run:  
 python3 main.py  
